@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+    image: api
+    container_name: api
+    hostname: api
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace:cached
+    stdin_open: true
+    # tty: true
+
+    network_mode: 'host'
