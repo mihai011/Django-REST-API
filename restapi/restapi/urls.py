@@ -21,9 +21,18 @@ from django.conf.urls import url
 
 from django.views.decorators.cache import cache_page
 
+from rest_framework.authtoken import views
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^api/v1/power/(?P<base>[-]?([0-9]*[.])?[0-9]+)/(?P<exponent>[-]?([0-9]*[.])?[0-9]+)',cache_page(60 * 10)(power_view), name="get_power"),
     path('api/v1/fibonaci/<int:index>',cache_page(60 * 15)(fibonaci_view), name="get_fibonaci"),
     path('api/v1/factorial/<int:index>',cache_page(60 * 15)(factorial_view), name="get_factorial"),
+]
+
+# auth api 
+urlpatterns += [
+    path('api-token-auth/', views.obtain_auth_token)
 ]

@@ -4,15 +4,42 @@ services:
   api:
     build:
       context: .
+
+    working_dir: /workspace/restapi
     image: api
     container_name: api
     hostname: api
     restart: on-failure
+    command: python manage.py runserver 0.0.0.0:8000
+    expose:
+      - 8000
     ports:
       - "8000:8000"
     volumes:
       - .:/workspace:cached
     stdin_open: true
-    # tty: true
+    
+    env_file:
+      - ./.env.dev
 
-    network_mode: 'host'
+    networks:
+      - shared_network
+
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    depends_on: 
+      - api
+    expose:
+      - 8000
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    driver: bridge

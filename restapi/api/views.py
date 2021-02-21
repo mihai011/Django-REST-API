@@ -7,9 +7,8 @@ from django.core.exceptions import ValidationError
 from .models import PowerRequest, FibonaciRequest, FactorialRequest
 from .serializers import PowerSerializer, FibonaciSerializer, FactorialSerializer
 
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 
 from .utils import findIndex
 import math
@@ -17,13 +16,17 @@ import math
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def power_view(request, base=None, exponent=None):
 
     try:
-        p = PowerRequest(base=base, exponent=exponent)
-        p.full_clean()
+        p, created = PowerRequest.objects.get_or_create(base=base, exponent=exponent)
+        if created:
+            p.full_clean()
+        else:
+            serializer = PowerSerializer(p)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
     except ValidationError as e:
         return Response(status=status.HTTP_400_BAD_REQUEST, exception=True)
 
@@ -37,11 +40,17 @@ def power_view(request, base=None, exponent=None):
 
 
 @api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def fibonaci_view(request, index=None):
 
     try:
-        f = FibonaciRequest(index=index)
-        f.full_clean()
+        f, created = FibonaciRequest.objects.get_or_create(index=index)
+        if created:
+            f.full_clean()
+        else:
+            serializer = FibonaciSerializer(f)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
     except ValidationError as e:
         return Response(status=status.HTTP_400_BAD_REQUEST, exception=True)
 
@@ -55,10 +64,16 @@ def fibonaci_view(request, index=None):
 
 
 @api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def factorial_view(request, index=None):
     try:
-        f = FactorialRequest(index=index)
-        f.full_clean()
+        f, created = FactorialRequest.objects.get_or_create(index=index)
+        if created:
+            f.full_clean()
+        else:
+            serializer = FactorialSerializer(f)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
     except ValidationError as e:
         return Response(status=status.HTTP_400_BAD_REQUEST, exception=True)
 
