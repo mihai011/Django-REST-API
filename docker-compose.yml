@@ -5,12 +5,12 @@ services:
     build:
       context: .
 
-    working_dir: /workspace/restapi
     image: api
     container_name: api
     hostname: api
     restart: on-failure
-    command: python manage.py runserver 0.0.0.0:8000
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: tail -f /dev/null
     expose:
       - 8000
     ports:
@@ -25,10 +25,48 @@ services:
     networks:
       - shared_network
 
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: rabbit
+    hostname: rabbit
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - "5682:5672"
+      - "15682:15672"
+    networks:
+      - shared_network
+
+  worker_logging:
+    image: api
+    command: celery -A restapi worker -Q logging -l info -E
+    # command: tail -f /dev/null 
+    depends_on:
+      - api
+      - rabbit
+    env_file:
+      - ./.env.dev
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+
+    networks:
+      - shared_network
+
   webserver:
     image: nginx:alpine
     container_name: webserver
-    restart: unless-stopped
+    restart: on-failure
     tty: true
     depends_on: 
       - api
@@ -36,7 +74,6 @@ services:
       - 8000
     volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
-
     networks:
       - shared_network
 

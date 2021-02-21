@@ -32,3 +32,7 @@ class FactorialRequest(models.Model):
 
     index = models.PositiveIntegerField(null=False, validators=[MinValueValidator(1)])
     response = models.FloatField(null=True, blank=True,  default=None)
+
+class LogRequest(models.Model):
+
+    log = models.JSONField(null=False )

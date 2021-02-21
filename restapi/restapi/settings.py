@@ -148,3 +148,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/workspace/restapi/static/'
+
+CELERY_BROKER_URL = 'amqp://admin:admin@rabbit:5672//'

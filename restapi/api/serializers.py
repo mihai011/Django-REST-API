@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PowerRequest, FibonaciRequest, FactorialRequest
+from .models import PowerRequest, FibonaciRequest, FactorialRequest, LogRequest
 
 class PowerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,4 +14,9 @@ class FibonaciSerializer(serializers.ModelSerializer):
 class FactorialSerializer(serializers.ModelSerializer):
     class Meta:
         model = FactorialRequest
-        fields =( 'index', 'response')
+        fields = ( 'index', 'response')
+
+class LogRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LogRequest
+        fields = ('log',)
