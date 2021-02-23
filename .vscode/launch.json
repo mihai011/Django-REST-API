@@ -4,25 +4,32 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
         {
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/restapi/manage.py",
             "args": [
-                "runserver", "0.0.0.0:8000"
+                "runserver",
+                "0.0.0.0:8000"
             ],
             "django": true
         },
-
         {
             "name": "Python: Django Test",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/restapi/manage.py",
             "args": [
-                "test", "api.tests"
+                "test",
+                "api.tests"
             ],
             "django": true
         }

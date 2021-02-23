@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from .utils import findIndex
 import math
 # Create your views here.
-
+from .tasks import create_log
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])

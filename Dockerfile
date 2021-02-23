@@ -14,5 +14,5 @@ RUN mkdir /workspace
 WORKDIR /workspace/restapi
 COPY ./ /workspace
 
-RUN adduser -D user
-USER user
+# RUN adduser -D user
+USER root

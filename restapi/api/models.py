@@ -35,4 +35,4 @@ class FactorialRequest(models.Model):
 
 class LogRequest(models.Model):
 
-    log = models.JSONField(null=False )
+    logging_state = models.JSONField(null=False)

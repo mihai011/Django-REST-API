@@ -1,7 +1,14 @@
 from django.contrib.auth.models import User
 
-from celery import shared_task
-@shared_task
-def create_log(info):
+from .models import LogRequest
+
+from celery.decorators import task
+import json
+
+@task(queue="logging")
+def create_log(info_json):
     
+    l = LogRequest(logging_state=json.loads(info_json))
+    l.save()
+
     return True
